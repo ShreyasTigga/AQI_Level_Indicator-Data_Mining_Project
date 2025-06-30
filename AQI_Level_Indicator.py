@@ -1,4 +1,4 @@
-# --- Step 1: Import Libraries ---
+# --- Importing Libraries ---
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -7,12 +7,12 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# --- Step 2: Load Dataset ---
+# --- Loading Dataset ---
 df = pd.read_csv("delhi_aqi.csv")
 df['date'] = pd.to_datetime(df['date'])
 df.dropna(inplace=True)
 
-# --- Step 3: Classify AQI Level ---
+# --- Classifying AQI Level ---
 def classify_aqi(pm25):
     if pm25 <= 50:
         return 'Good'
@@ -29,23 +29,23 @@ def classify_aqi(pm25):
 
 df['AQI_Level'] = df['pm2_5'].apply(classify_aqi)
 
-# --- Step 4: Prepare Features and Labels ---
+# --- Preparing Features and Labels ---
 features = ['co', 'no', 'no2', 'o3', 'so2', 'pm10', 'nh3']
 X = df[features]
 y = df['AQI_Level']
 
-# Encode target labels
+# Encoding target labels
 label_encoder = LabelEncoder()
 y_encoded = label_encoder.fit_transform(y)
 
-# --- Step 5: Train-Test Split ---
+# --- Train-Test Split ---
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
-# --- Step 6: Train Random Forest Model ---
+# --- Training Random Forest Model ---
 model = RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)
 model.fit(X_train, y_train)
 
-# --- Step 7: Evaluate ---
+# --- Evaluation ---
 y_pred = model.predict(X_test)
 print("Classification Report:")
 print(classification_report(y_test, y_pred, target_names=label_encoder.classes_))
@@ -60,7 +60,7 @@ plt.show()
 
 print("Accuracy:", accuracy_score(y_test, y_pred))
 
-# --- Step 8: Feature Importance ---
+# --- Feature Importance ---
 importances = model.feature_importances_
 feature_importance_df = pd.DataFrame({'Feature': features, 'Importance': importances})
 feature_importance_df.sort_values(by='Importance', ascending=False, inplace=True)
